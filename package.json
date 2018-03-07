@@ -1,0 +1,34 @@
+{
+  "name": "nyc_bus_dash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maismin/NYC_Bus_Dash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maismin/NYC_Bus_Dash/issues"
+  },
+  "homepage": "https://github.com/maismin/NYC_Bus_Dash#readme",
+  "dependencies": {
+    "jsx-control-statements": "^3.2.8",
+    "leaflet": "^1.3.1",
+    "prop-types": "^15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-leaflet": "^1.8.2",
+    "react-only-if": "^1.0.0",
+    "react-scripts": "1.1.1",
+    "render-if": "^0.1.1"
+  },
+  "devDependencies": {}
+}
