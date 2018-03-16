@@ -12,7 +12,7 @@ const circleOpacity = 0.7;
 //   { this.isUserMarkerAvailable && <Marker position={userLatLng} /> }
 // );
 
-class BusMap extends Component {
+class BusMapContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,4 +63,4 @@ class BusMap extends Component {
   }
 }
 
-export default BusMap;
+export default BusMapContainer;
