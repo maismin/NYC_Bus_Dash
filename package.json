@@ -7,7 +7,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "repository": {
     "type": "git",
@@ -20,15 +22,30 @@
   },
   "homepage": "https://github.com/maismin/NYC_Bus_Dash#readme",
   "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "bootstrap": "^4.0.0",
+    "bootstrap3": "^3.3.5",
     "jsx-control-statements": "^3.2.8",
     "leaflet": "^1.3.1",
+    "moment": "^2.21.0",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.32.1",
+    "react-datepicker": "^1.2.2",
     "react-dom": "^16.2.0",
+    "react-jsonschema-form": "^1.0.2",
     "react-leaflet": "^1.8.2",
     "react-only-if": "^1.0.0",
+    "react-refetch": "^1.0.4",
     "react-scripts": "1.1.1",
+    "react-virtualized-select": "^3.1.3",
     "render-if": "^0.1.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@storybook/react": "^3.3.15",
+    "@storybook/addon-actions": "^3.3.15",
+    "@storybook/addon-links": "^3.3.15",
+    "@storybook/addons": "^3.3.15",
+    "babel-core": "^6.26.0"
+  }
 }
