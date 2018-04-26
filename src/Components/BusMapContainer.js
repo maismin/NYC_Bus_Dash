@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Circle, LayerGroup, onMouseOver} from 'react-leaflet';
+import { Map, TileLayer, LayerGroup, LayersControl, Marker, Popup, FeatureGroup, Circle, Tooltip  } from 'react-leaflet';
 import L from 'leaflet';
 import BusRouteLayerContainer from './BusRouteLayerContainer';
-import m4_0_Route from '../M4_0.json';
-import m4_1_Route from '../M4_1.json';
+import ReactLeafletMarkerRadius from './ReactLeafletMarkerRadius';
+import ReactLeafletNearestBusStops from './ReactLeafletNearestBusStops';
+// import m4_0_Route from '../M4_0.json';
+// import m4_1_Route from '../M4_1.json';
 
 const stamenTonerTiles = 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png';
 const stamenTonerAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 const mapCenter = [40.785091, -73.968285];
 const zoomLevel = 13;
-const circleRadius = 800;
+const circleRadius = 200;
 const circleOpacity = 0.7;
+const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
 // For simulating API cals to the backend
-const busRouteResponse = [
-//  ['m4_0_route', m4_0_Route],
-  ['m4_1_route', m4_1_Route]
-];
+// const busRouteResponse = [
+// //  ['m4_0_route', m4_0_Route],
+//   ['m4_1_route', m4_1_Route]
+// ];
 
 // const Markers = () => (
 //   { this.isUserMarkerAvailable && <Marker position={userLatLng} /> }
@@ -25,27 +28,57 @@ class BusMapContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userLatLng: []
+      userLatLng: [],
+      nearestBusStops: {},
     }
 
     this.handleClickAtLocation = this.handleClickAtLocation.bind(this);
+    this.grabNearestBusStops = this.grabNearestBusStops.bind(this);
     this.onEachFeature = this.onEachFeature.bind(this);
     this.pointToLayer = this.pointToLayer.bind(this);
   }
 
   get isUserMarkerAvailable() {
     const userLatLng = this.state.userLatLng;
-    return (Array.isArray(userLatLng) && 
-            userLatLng.length &&
-            false);
+    return (Array.isArray(userLatLng) && userLatLng.length);
+  }
+
+  get isBusStopsAvailable() {
+    let isEmpty = require('lodash/isEmpty');
+    const busStops = this.state.nearestBusStops;
+    // console.log(isEmpty(busStops));
+    return !isEmpty(busStops);
+  }
+
+  get isBusRouteGeoAvailable() {
+    let isEmpty = require('lodash/isEmpty');
+    // const busRoute = this.props.busRoute;
+    // const direction = this.props.direction.direction;
+    // console.log(`BusMap:${!isEmpty(this.props.geo)}`);
+    // console.log(`BusRoute:${this.props.busRoute}`);
+    // console.log(`BusDirection:${JSON.stringify(this.props.direction)}`);
+    return (!isEmpty(this.props.geo));
   }
 
   handleClickAtLocation( target ) {
     this.setState({
       userLatLng: [target.latlng.lat, target.latlng.lng],
-      reset: false
+      nearestBusStops: {}
     });
-    console.log(this.state.userLatLng);
+    this.grabNearestBusStops();
+  }
+
+  grabNearestBusStops() {
+    const lat = this.state.userLatLng[0];
+    const lng = this.state.userLatLng[1]    
+    let url = URL_ROOT + `geo/nearest-points/lon/${lng}/lat/${lat}/dist/${0.0018}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(nearestBusStops => {
+        this.setState({
+          nearestBusStops: nearestBusStops
+        });
+      });
   }
 
   onEachFeature(feature, layer) {
@@ -54,6 +87,11 @@ class BusMapContainer extends Component {
     layer.on({
       mouseover: function(e) {
         console.log(e.target.feature.properties.stop_name)
+        return (
+          <Popup>
+            <span> Hello </span>
+          </Popup>
+        );
       },
       click: function(e) {
         console.log("you've clicked on " + e.target.feature.properties.stop_name);
@@ -75,7 +113,7 @@ class BusMapContainer extends Component {
 
   componentDidMount() {
     const leafletMap = this.leafletMap.leafletElement;
-    leafletMap.on('click', this.handleClickAtLocation);
+    // leafletMap.on('click', this.handleClickAtLocation);
   }
 
   render() {
@@ -86,22 +124,31 @@ class BusMapContainer extends Component {
           center={mapCenter}
           zoom={zoomLevel}
         >
-          <TileLayer
-            attribution = { stamenTonerAttr }
-            url = { stamenTonerTiles }
-          />
-          { this.isUserMarkerAvailable && 
-            <Marker position={this.state.userLatLng} />
-          }
-          { this.isUserMarkerAvailable && 
-            <Circle center={this.state.userLatLng} radius={circleRadius} opacity={circleOpacity} /> 
-          }
-          <LayerGroup>
-            {busRouteResponse.map(busRoute => <BusRouteLayerContainer geojson={busRoute[1]} 
-                                                                      keyValue={busRoute[0]} 
-                                                                      onEachFeature={this.onEachFeature} 
-                                                                      pointToLayer={this.pointToLayer} />)}
-          </LayerGroup>
+        <TileLayer
+          attribution = { stamenTonerAttr }
+          url = { stamenTonerTiles }
+        />
+        { this.isUserMarkerAvailable &&
+          <ReactLeafletMarkerRadius latlng={this.state.userLatLng}
+                                    radius={circleRadius}
+                                    opacity={circleOpacity}
+                                    />
+        }
+
+        { this.isBusStopsAvailable &&
+          <ReactLeafletNearestBusStops busStops={this.state.nearestBusStops}
+                                       onEachFeature={this.onEachFeature}
+                                       pointToLayer={this.pointToLayer}
+                                    />
+        }
+
+        {
+          this.isBusRouteGeoAvailable &&
+          <BusRouteLayerContainer geojson={this.props.geo}
+                                  onEachFeature={this.onEachFeature}
+                                  pointToLayer={this.pointToLayer} />
+        }
+
         </Map>
       </div>
     );

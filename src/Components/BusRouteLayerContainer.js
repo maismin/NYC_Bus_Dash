@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import {GeoJSON } from 'react-leaflet';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { GeoJSON, LayerGroup } from 'react-leaflet';
 
-class BusRouteLayerContainer extends Component {
-  constructor(props) {
-    super(props);
-  }
+const BusRouteLayerContainer = ({ geojson, onEachFeature, pointToLayer }) => (
+  <LayerGroup>
+    <GeoJSON  data={geojson}
+              onEachFeature={onEachFeature} 
+              pointToLayer={pointToLayer} 
+              />
+  </LayerGroup>
+)
 
-  render() {
-    return (
-      <GeoJSON  data={this.props.geojson} 
-                key={this.props.keyValue} 
-                onEachFeature={this.props.onEachFeature} 
-                pointToLayer={this.props.pointToLayer} 
-                />
-    );
-  }
+BusRouteLayerContainer.propTypes = {
+  geojson: PropTypes.object,
+  onEachFeature: PropTypes.func,
+  pointToLayer: PropTypes.func
 }
 
 export default BusRouteLayerContainer;

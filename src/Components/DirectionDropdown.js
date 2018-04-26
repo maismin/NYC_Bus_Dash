@@ -56,7 +56,7 @@ class DirectionDropdown extends Component {
   }
 
   handleChange(target) {
-    console.log(target);
+    // console.log(target);
     this.setState({
       value: target
     })

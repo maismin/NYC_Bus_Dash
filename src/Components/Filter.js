@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BusRouteDropdown from './BusRouteDropdown';
 import DirectionDropdown from './DirectionDropdown';
 
-const FilterContainer = ({ busRoute, updateBusRoute, updateDirection }) => (
+const Filter = ({ busRoute, updateBusRoute, updateDirection }) => (
   <div>
     Bus Route
     <BusRouteDropdown
@@ -18,10 +18,10 @@ const FilterContainer = ({ busRoute, updateBusRoute, updateDirection }) => (
   </div>
 )
 
-FilterContainer.propTypes = {
+Filter.propTypes = {
   busRoute: PropTypes.string,
   updateBusRoute: PropTypes.func,
   updateDirection: PropTypes.func
 }
 
-export default FilterContainer
+export default Filter;
