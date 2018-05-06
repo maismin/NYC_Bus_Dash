@@ -135,7 +135,7 @@ class App extends Component {
           </Row>
 
           <Row className="show-grid" >
-            <Col md={12}>
+            <Col md={4}>
               <BusMapContainer busRoute={this.state.busRoute}
                                geo={this.state.busRouteGeo}
                                direction={this.state.direction}

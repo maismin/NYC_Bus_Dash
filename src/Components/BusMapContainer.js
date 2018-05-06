@@ -4,6 +4,7 @@ import L from 'leaflet';
 import BusRouteLayerContainer from './BusRouteLayerContainer';
 import ReactLeafletMarkerRadius from './ReactLeafletMarkerRadius';
 import ReactLeafletNearestBusStops from './ReactLeafletNearestBusStops';
+import { Panel } from 'react-bootstrap';
 
 const stamenTonerTiles = 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png';
 const stamenTonerAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
@@ -12,7 +13,7 @@ const zoomLevel = 13;
 const circleRadius = 200;
 const circleOpacity = 0.7;
 const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
-
+const zIndex = 400;
 
 class BusMapContainer extends Component {
   constructor(props) {
@@ -107,11 +108,12 @@ class BusMapContainer extends Component {
 
   render() {
     return (
-      <div>
+      <Panel>
         <Map
           ref = { m => { this.leafletMap = m; } }
           center={mapCenter}
           zoom={zoomLevel}
+          zoomControl={false}
         >
         <LayersControl position="topright">
   <LayersControl.BaseLayer name="OpenStreetMap.BlackAndWhite">
@@ -152,6 +154,7 @@ class BusMapContainer extends Component {
           <TileLayer
             attribution = { stamenTonerAttr }
             url = { stamenTonerTiles }
+            zIndex = { zIndex }
           />
           { this.isUserMarkerAvailable &&
             <ReactLeafletMarkerRadius latlng={this.state.userLatLng}
@@ -175,7 +178,7 @@ class BusMapContainer extends Component {
           }
 
         </Map>
-      </div>
+      </Panel>
     );
   }
 }
