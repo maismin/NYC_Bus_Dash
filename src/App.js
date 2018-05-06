@@ -8,6 +8,7 @@ const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
 const defaultBusRoute = "";
 const defaultDirection = {direction: "", value: -1};
 const defaultBusRouteGeo = {};
+const defaultStation = {station: "", value: -1};
 
 class App extends Component {
   constructor(props) {
@@ -18,12 +19,16 @@ class App extends Component {
       startDate: null,
       endDate: null,
       direction: defaultDirection,
-      busRouteGeo: defaultBusRouteGeo
+      busRouteGeo: defaultBusRouteGeo,
+      startStation: defaultStation,
+      endStation: defaultStation
     }
 
     this.loadBusRoute = this.loadBusRoute.bind(this);
     this.handleBusRouteChange = this.handleBusRouteChange.bind(this);
     this.handleDirectionChange = this.handleDirectionChange.bind(this);
+    this.handleStartStation = this.handleStartStation.bind(this);
+    this.handleEndStation = this.handleEndStation.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStartDate = this.handleStartDate.bind(this);
     this.handleEndDate = this.handleEndDate.bind(this);
@@ -78,6 +83,22 @@ class App extends Component {
     }, this.loadBusRoute);
   }
 
+  handleStartStation(busStation) {
+    const startStation = busStation === null ? defaultStation : busStation;
+    this.setState({
+      startStation,
+      busRouteGeo: defaultBusRouteGeo
+    }, this.loadBusRoute);
+  }
+
+  handleEndStation(busStation) {
+    const endStation = busStation === null ? defaultStation : busStation;
+    this.setState({
+      endStation,
+      busRouteGeo: defaultBusRouteGeo
+    }, this.loadBusRoute);
+  }
+
   handleStartDate(date) {
     this.setState({
       startDate: date
@@ -104,9 +125,12 @@ class App extends Component {
           <Row className="show-grid" >
             <Col md={12}>
               <Filter busRoute={this.state.busRoute}
-                               updateBusRoute={this.handleBusRouteChange}
-                               updateDirection={this.handleDirectionChange}
-                               />
+                      direction={this.state.direction}
+                      updateBusRoute={this.handleBusRouteChange}
+                      updateDirection={this.handleDirectionChange}
+                      updateStartStation={this.handleStartStation}
+                      updateEndStation={this.handleEndStation}
+                      />
             </Col>
           </Row>
 
@@ -117,7 +141,7 @@ class App extends Component {
                                direction={this.state.direction}
                                updateBusRoute={this.handleBusRouteChange}
                                updateDirection={this.handleDirectionChange}
-                               />
+                               />              
             </Col>
           </Row>
 

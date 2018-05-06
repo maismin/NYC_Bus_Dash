@@ -4,8 +4,6 @@ import L from 'leaflet';
 import BusRouteLayerContainer from './BusRouteLayerContainer';
 import ReactLeafletMarkerRadius from './ReactLeafletMarkerRadius';
 import ReactLeafletNearestBusStops from './ReactLeafletNearestBusStops';
-// import m4_0_Route from '../M4_0.json';
-// import m4_1_Route from '../M4_1.json';
 
 const stamenTonerTiles = 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png';
 const stamenTonerAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
@@ -14,15 +12,7 @@ const zoomLevel = 13;
 const circleRadius = 200;
 const circleOpacity = 0.7;
 const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
-// For simulating API cals to the backend
-// const busRouteResponse = [
-// //  ['m4_0_route', m4_0_Route],
-//   ['m4_1_route', m4_1_Route]
-// ];
 
-// const Markers = () => (
-//   { this.isUserMarkerAvailable && <Marker position={userLatLng} /> }
-// );
 
 class BusMapContainer extends Component {
   constructor(props) {
@@ -84,21 +74,20 @@ class BusMapContainer extends Component {
   onEachFeature(feature, layer) {
 //    console.log('feature: ', feature);
 //    console.log('layer: ', layer);
-    layer.on({
-      mouseover: function(e) {
-        console.log(e.target.feature.properties.stop_name)
-        return (
-          <Popup>
-            <span> Hello </span>
-          </Popup>
-        );
-      },
-      click: function(e) {
-        console.log("you've clicked on " + e.target.feature.properties.stop_name);
-      }
-//      mouseout: this.resetHighlight.bind(this)
-//      click: this.clickToFeature.bind(this)
-    });
+    const stopName = feature.properties.stop_name;
+    layer.bindTooltip(stopName);
+//     layer.on({
+//       mouseover: function(e) {
+//         console.log(e.target.feature.properties.stop_name)
+//         const stopName = e.target.feature.properties.stop_name;
+//         layer.bindTooltip(stopName);
+//       },
+//       click: function(e) {
+//         console.log("you've clicked on " + e.target.feature.properties.stop_name);
+//       }
+// //      mouseout: this.resetHighlight.bind(this)
+// //      click: this.clickToFeature.bind(this)
+//     });
   }
 
   pointToLayer(feature, latlng) {
@@ -124,30 +113,66 @@ class BusMapContainer extends Component {
           center={mapCenter}
           zoom={zoomLevel}
         >
-        <TileLayer
-          attribution = { stamenTonerAttr }
-          url = { stamenTonerTiles }
-        />
-        { this.isUserMarkerAvailable &&
-          <ReactLeafletMarkerRadius latlng={this.state.userLatLng}
-                                    radius={circleRadius}
-                                    opacity={circleOpacity}
-                                    />
-        }
+        <LayersControl position="topright">
+  <LayersControl.BaseLayer name="OpenStreetMap.BlackAndWhite">
+    <TileLayer
+      attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+      url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+    />
+  </LayersControl.BaseLayer>
+  <LayersControl.BaseLayer name="OpenStreetMap.Mapnik">
+    <TileLayer
+      attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+  </LayersControl.BaseLayer>
+  <LayersControl.Overlay name="Marker with popup">
+    <Marker position={[40.810821008436534, -73.93896102992586]}>
+      <Popup>
+        <span>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </span>
+      </Popup>
+      <Tooltip>
+        <span>
+          Hello
+        </span>
+      </Tooltip>
+    </Marker>
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Feature group">
+    <FeatureGroup color="purple">
+      <Popup>
+        <span>Popup in FeatureGroup</span>
+      </Popup>
+      <Circle center={[40.810821008436534, -73.93896102992586]} radius={200} />
+    </FeatureGroup>
+  </LayersControl.Overlay>
+</LayersControl>
+          <TileLayer
+            attribution = { stamenTonerAttr }
+            url = { stamenTonerTiles }
+          />
+          { this.isUserMarkerAvailable &&
+            <ReactLeafletMarkerRadius latlng={this.state.userLatLng}
+                                      radius={circleRadius}
+                                      opacity={circleOpacity}
+                                      />
+          }
 
-        { this.isBusStopsAvailable &&
-          <ReactLeafletNearestBusStops busStops={this.state.nearestBusStops}
-                                       onEachFeature={this.onEachFeature}
-                                       pointToLayer={this.pointToLayer}
-                                    />
-        }
+          { this.isBusStopsAvailable &&
+            <ReactLeafletNearestBusStops busStops={this.state.nearestBusStops}
+                                         onEachFeature={this.onEachFeature}
+                                         pointToLayer={this.pointToLayer}
+                                      />
+          }
 
-        {
-          this.isBusRouteGeoAvailable &&
-          <BusRouteLayerContainer geojson={this.props.geo}
-                                  onEachFeature={this.onEachFeature}
-                                  pointToLayer={this.pointToLayer} />
-        }
+          {
+            this.isBusRouteGeoAvailable &&
+            <BusRouteLayerContainer geojson={this.props.geo}
+                                    onEachFeature={this.onEachFeature}
+                                    pointToLayer={this.pointToLayer} />
+          }
 
         </Map>
       </div>
