@@ -8,7 +8,7 @@ const options = [
 ];
 
 const DateRangeDropDown = ({value, onChange}) => (
-  <Dropdown options={options} onChange={onChange}/>
+  <Dropdown options={options} onChange={onChange} value={value}/>
 );
 
 DateRangeDropDown.propTypes = {

@@ -11,7 +11,7 @@ const options = [
 ];
 
 const TimeDropDown = ({value, onChange}) => (
-  <Dropdown options={options} onChange={onChange}/>
+  <Dropdown options={options} onChange={onChange} value={value}/>
 );
 
 TimeDropDown.propTypes = {

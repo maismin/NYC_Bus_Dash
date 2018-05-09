@@ -12,6 +12,7 @@ const defaultBusRoute = "";
 const defaultDirection = {direction: "", value: -1};
 const defaultBusRouteGeo = {};
 const defaultStation = {station: "", value: -1};
+const defaultTimeRange = {label: "", value: ""}
 const defaultDateRange = {label: "", value: ""}
 
 class App extends Component {
@@ -25,7 +26,7 @@ class App extends Component {
       startStation: defaultStation,
       endStation: defaultStation,
       weekInterval: "",
-      timeInterval: "",
+      timeInterval: defaultTimeRange,
       dateInterval: defaultDateRange
     }
 
@@ -111,16 +112,16 @@ class App extends Component {
   }
 
   handleWeekInterval(week) {
-    console.log(week.value);
+    console.log(week);
     this.setState({
       weekInterval: week.value
     });
   }
 
   handleTimeInterval(time) {
-    console.log(time.value);
+    console.log(time);
     this.setState({
-      timeInterval: time.value
+      timeInterval: time
     });
   }
 
@@ -140,7 +141,7 @@ class App extends Component {
               <Filter busRoute={this.state.busRoute}
                       direction={this.state.direction}
                       week={this.state.weekInterval}
-                      time={this.state.timeInterval}
+                      time={this.state.timeInterval.label}
                       date={this.state.dateInterval.label}
                       updateBusRoute={this.handleBusRouteChange}
                       updateDirection={this.handleDirectionChange}
