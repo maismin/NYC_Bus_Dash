@@ -17,12 +17,12 @@ class App extends Component {
 
     this.state = {
       busRoute: defaultBusRoute,
-      startDate: null,
-      endDate: null,
       direction: defaultDirection,
       busRouteGeo: defaultBusRouteGeo,
       startStation: defaultStation,
-      endStation: defaultStation
+      endStation: defaultStation,
+      weekInterval: "",
+      timeInterval: ""
     }
 
     this.loadBusRoute = this.loadBusRoute.bind(this);
@@ -30,9 +30,8 @@ class App extends Component {
     this.handleDirectionChange = this.handleDirectionChange.bind(this);
     this.handleStartStation = this.handleStartStation.bind(this);
     this.handleEndStation = this.handleEndStation.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleStartDate = this.handleStartDate.bind(this);
-    this.handleEndDate = this.handleEndDate.bind(this);
+    this.handleWeekInterval = this.handleWeekInterval.bind(this);
+    this.handleTimeInterval = this.handleTimeInterval.bind(this);
   }
 
   loadBusRoute() {
@@ -62,13 +61,17 @@ class App extends Component {
       this.setState({
         busRoute: target.busRoute,
         direction: defaultDirection,
-        busRouteGeo: defaultBusRouteGeo
+        busRouteGeo: defaultBusRouteGeo,
+        weekInterval: "",
+        timeInterval: ""
       });
     } else {
       this.setState({
         busRoute: defaultBusRoute,
         direction: defaultDirection,
-        busRouteGeo: defaultBusRouteGeo
+        busRouteGeo: defaultBusRouteGeo,
+        weekInterval: "",
+        timeInterval: ""
       });
     }
   }
@@ -100,23 +103,18 @@ class App extends Component {
     }, this.loadBusRoute);
   }
 
-  handleStartDate(date) {
+  handleWeekInterval(week) {
+    console.log(week.value);
     this.setState({
-      startDate: date
+      weekInterval: week.value
     });
-    //console.log(typeof this.state.startDate);
-    console.log(typeof date._d);
-    console.log(date._d);
   }
 
-  handleEndDate(date) {
+  handleTimeInterval(time) {
+    console.log(time.value);
     this.setState({
-      endDate: date
+      timeInterval: time.value
     });
-    console.log(this.state.endDate);
-  }
-
-  handleSubmit() {
   }
 
   render() {
@@ -127,10 +125,14 @@ class App extends Component {
             <Col md={12}>
               <Filter busRoute={this.state.busRoute}
                       direction={this.state.direction}
+                      week={this.state.weekInterval}
+                      time={this.state.timeInterval}
                       updateBusRoute={this.handleBusRouteChange}
                       updateDirection={this.handleDirectionChange}
                       updateStartStation={this.handleStartStation}
                       updateEndStation={this.handleEndStation}
+                      updateWeek={this.handleWeekInterval}
+                      updateTime={this.handleTimeInterval}
                       />
             </Col>
           </Row>

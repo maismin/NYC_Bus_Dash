@@ -97,6 +97,7 @@ class BusMapContainer extends Component {
   }
 
   pointToLayer(feature, latlng) {
+    console.log(feature);
     let options = {
       color: '#3388ff',
       fill: true,
