@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, LayerGroup, LayersControl, Marker, Popup, FeatureGroup, Circle, Tooltip  } from 'react-leaflet';
+// import { Map, TileLayer, LayerGroup, LayersControl, Marker, Popup, FeatureGroup, Circle, Tooltip  } from 'react-leaflet';
+import { Map, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
-import BusRouteLayerContainer from './BusRouteLayerContainer';
+import BusRouteLayer from './BusRouteLayer';
 import ReactLeafletMarkerRadius from './ReactLeafletMarkerRadius';
 import ReactLeafletNearestBusStops from './ReactLeafletNearestBusStops';
 import { Panel } from 'react-bootstrap';
@@ -75,20 +76,24 @@ class BusMapContainer extends Component {
   onEachFeature(feature, layer) {
 //    console.log('feature: ', feature);
 //    console.log('layer: ', layer);
+    // console.log(feature);
     const stopName = feature.properties.stop_name;
+    const stopSequence = feature.properties.stop_sequence;
     layer.bindTooltip(stopName);
-//     layer.on({
-//       mouseover: function(e) {
-//         console.log(e.target.feature.properties.stop_name)
-//         const stopName = e.target.feature.properties.stop_name;
-//         layer.bindTooltip(stopName);
-//       },
-//       click: function(e) {
-//         console.log("you've clicked on " + e.target.feature.properties.stop_name);
-//       }
-// //      mouseout: this.resetHighlight.bind(this)
-// //      click: this.clickToFeature.bind(this)
-//     });
+    layer.on({
+      // mouseover: function(e) {
+      //   console.log(e.target.feature.properties.stop_name)
+      //   const stopName = e.target.feature.properties.stop_name;
+      //   layer.bindTooltip(stopName);
+      // },
+      click: function(e) {
+        // console.log("you've clicked on " + e.target.feature.properties.stop_name);
+        let station = {station: stopName, value: stopSequence};
+        console.log(station);
+      }
+//      mouseout: this.resetHighlight.bind(this)
+//      click: this.clickToFeature.bind(this)
+    });
   }
 
   pointToLayer(feature, latlng) {
@@ -115,42 +120,7 @@ class BusMapContainer extends Component {
           zoom={zoomLevel}
           zoomControl={false}
         >
-        <LayersControl position="topright">
-  <LayersControl.BaseLayer name="OpenStreetMap.BlackAndWhite">
-    <TileLayer
-      attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-      url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-    />
-  </LayersControl.BaseLayer>
-  <LayersControl.BaseLayer name="OpenStreetMap.Mapnik">
-    <TileLayer
-      attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-  </LayersControl.BaseLayer>
-  <LayersControl.Overlay name="Marker with popup">
-    <Marker position={[40.810821008436534, -73.93896102992586]}>
-      <Popup>
-        <span>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </span>
-      </Popup>
-      <Tooltip>
-        <span>
-          Hello
-        </span>
-      </Tooltip>
-    </Marker>
-  </LayersControl.Overlay>
-  <LayersControl.Overlay name="Feature group">
-    <FeatureGroup color="purple">
-      <Popup>
-        <span>Popup in FeatureGroup</span>
-      </Popup>
-      <Circle center={[40.810821008436534, -73.93896102992586]} radius={200} />
-    </FeatureGroup>
-  </LayersControl.Overlay>
-</LayersControl>
+
           <TileLayer
             attribution = { stamenTonerAttr }
             url = { stamenTonerTiles }
@@ -172,9 +142,9 @@ class BusMapContainer extends Component {
 
           {
             this.isBusRouteGeoAvailable &&
-            <BusRouteLayerContainer geojson={this.props.geo}
-                                    onEachFeature={this.onEachFeature}
-                                    pointToLayer={this.pointToLayer} />
+            <BusRouteLayer geojson={this.props.geo}
+                           onEachFeature={this.onEachFeature}
+                           pointToLayer={this.pointToLayer} />
           }
 
         </Map>

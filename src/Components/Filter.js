@@ -6,7 +6,13 @@ import BusStationDropDown from './BusStationDropDown';
 
 import { Panel, Grid, Row, Col } from 'react-bootstrap';
 
-const Filter = ({ busRoute, direction, updateBusRoute, updateDirection, updateStartStation, updateEndStation}) => (
+const Filter = ({ busRoute, 
+                  direction, 
+                  updateBusRoute, 
+                  updateDirection, 
+                  updateStartStation, 
+                  updateEndStation}) => (
+                  
   <Panel style={{zIndex:500}}>
     <Panel.Heading className="text-left">Filter</Panel.Heading>
     <Grid className="text-left">

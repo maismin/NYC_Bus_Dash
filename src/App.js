@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import BusMapContainer from './Components/BusMapContainer';
 import Filter from './Components/Filter';
+import RouteSummaryContainer from './Components/RouteSummaryContainer';
 import { Grid, Row, Col } from 'react-bootstrap';
 
 const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
@@ -122,7 +123,7 @@ class App extends Component {
     return (
       <div className="App">
         <Grid>
-          <Row className="show-grid" >
+          <Row  >
             <Col md={12}>
               <Filter busRoute={this.state.busRoute}
                       direction={this.state.direction}
@@ -134,14 +135,29 @@ class App extends Component {
             </Col>
           </Row>
 
-          <Row className="show-grid" >
+          <Row>
+            <Col md={12}>
+              <RouteSummaryContainer  excessWaitTime={5}
+                                      routeLatenessFactor={5}
+                                      avgSpeed={8}
+                                      />
+            </Col>
+          </Row>
+
+          <Row  >
             <Col md={4}>
               <BusMapContainer busRoute={this.state.busRoute}
                                geo={this.state.busRouteGeo}
                                direction={this.state.direction}
                                updateBusRoute={this.handleBusRouteChange}
                                updateDirection={this.handleDirectionChange}
+                               updateStartStation={this.handleStartStation}
+                               updateEndStation={this.handleEndStation}
                                />              
+            </Col>
+
+            <Col md={8}>
+                         
             </Col>
           </Row>
 
