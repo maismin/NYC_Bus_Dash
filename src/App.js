@@ -4,6 +4,7 @@ import BusMapContainer from './Components/BusMapContainer';
 import Filter from './Components/Filter';
 import RouteSummaryContainer from './Components/RouteSummaryContainer';
 import JourneyPerformanceBarChart from './Components/JourneyPerformanceBarChart';
+import AverageJourneyPerformance from './Components/AverageJourneyPerformance';
 import { Grid, Row, Col, Panel, Label } from 'react-bootstrap';
 
 const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
@@ -180,6 +181,11 @@ class App extends Component {
                   <Col md={4}>
                     <Label className="text-center">Your Journey Performance</Label>
                     <JourneyPerformanceBarChart />
+                  </Col>
+
+                  <Col md={4}>
+                    <Label className="text-center">Average Journey Performance</Label>
+                    <AverageJourneyPerformance />
                   </Col>
                 </Row>
               </Grid>
