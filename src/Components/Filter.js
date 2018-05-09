@@ -5,6 +5,7 @@ import DirectionDropdown from './DirectionDropdown';
 import BusStationDropDown from './BusStationDropDown';
 import WeekDropDown from './WeekDropDown';
 import TimeDropDown from './TimeDropDown';
+import DateRangeDropDown from './DateRangeDropDown';
 
 import { Panel, Grid, Row, Col } from 'react-bootstrap';
 
@@ -12,12 +13,14 @@ const Filter = ({ busRoute,
                   direction, 
                   week,
                   time,
+                  date,
                   updateBusRoute, 
                   updateDirection, 
                   updateStartStation, 
                   updateEndStation,
                   updateWeek,
-                  updateTime}) => (
+                  updateTime,
+                  updateDate}) => (
 
   <Panel style={{zIndex:500}}>
     <Panel.Heading className="text-left">Filter</Panel.Heading>
@@ -61,14 +64,21 @@ const Filter = ({ busRoute,
       </Row>
 
       <Row>
-        <Col md={5}>
+        <Col md={3}>
+          Date Range
+          <DateRangeDropDown onChange={updateDate}
+                        value={date}
+                        />
+        </Col>
+
+        <Col md={3}>
           Week
           <WeekDropDown onChange={updateWeek}
                         value={week}
                         />
         </Col>
 
-        <Col md={5}>
+        <Col md={3}>
           Time
           <TimeDropDown onChange={updateTime}
                           value={time}
@@ -84,12 +94,14 @@ Filter.propTypes = {
   direction: PropTypes.object,
   week: PropTypes.string,
   time: PropTypes.string,
+  date: PropTypes.string,
   updateBusRoute: PropTypes.func,
   updateDirection: PropTypes.func,
   updateStartStation: PropTypes.func,
   updateEndStation: PropTypes.func,
   updateWeek: PropTypes.func,
-  updateTime: PropTypes.func
+  updateTime: PropTypes.func,
+  updateDate: PropTypes.func
 }
 
 export default Filter;

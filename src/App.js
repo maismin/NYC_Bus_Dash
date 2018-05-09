@@ -10,6 +10,7 @@ const defaultBusRoute = "";
 const defaultDirection = {direction: "", value: -1};
 const defaultBusRouteGeo = {};
 const defaultStation = {station: "", value: -1};
+const defaultDateRange = {label: "", value: ""}
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +23,8 @@ class App extends Component {
       startStation: defaultStation,
       endStation: defaultStation,
       weekInterval: "",
-      timeInterval: ""
+      timeInterval: "",
+      dateInterval: defaultDateRange
     }
 
     this.loadBusRoute = this.loadBusRoute.bind(this);
@@ -32,6 +34,7 @@ class App extends Component {
     this.handleEndStation = this.handleEndStation.bind(this);
     this.handleWeekInterval = this.handleWeekInterval.bind(this);
     this.handleTimeInterval = this.handleTimeInterval.bind(this);
+    this.handleDateInterval = this.handleDateInterval.bind(this);
   }
 
   loadBusRoute() {
@@ -63,7 +66,8 @@ class App extends Component {
         direction: defaultDirection,
         busRouteGeo: defaultBusRouteGeo,
         weekInterval: "",
-        timeInterval: ""
+        timeInterval: "",
+        dateInterval: defaultDateRange
       });
     } else {
       this.setState({
@@ -71,7 +75,8 @@ class App extends Component {
         direction: defaultDirection,
         busRouteGeo: defaultBusRouteGeo,
         weekInterval: "",
-        timeInterval: ""
+        timeInterval: "",
+        dateInterval: defaultDateRange
       });
     }
   }
@@ -117,6 +122,13 @@ class App extends Component {
     });
   }
 
+  handleDateInterval(date) {
+    console.log(date);
+    this.setState({
+      dateInterval: date
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -127,12 +139,14 @@ class App extends Component {
                       direction={this.state.direction}
                       week={this.state.weekInterval}
                       time={this.state.timeInterval}
+                      date={this.state.dateInterval.label}
                       updateBusRoute={this.handleBusRouteChange}
                       updateDirection={this.handleDirectionChange}
                       updateStartStation={this.handleStartStation}
                       updateEndStation={this.handleEndStation}
                       updateWeek={this.handleWeekInterval}
                       updateTime={this.handleTimeInterval}
+                      updateDate={this.handleDateInterval}
                       />
             </Col>
           </Row>
