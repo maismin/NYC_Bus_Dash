@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {XYPlot, XAxis, YAxis, VerticalBarSeries, LineSeries} from 'react-vis';
+import { XYPlot, XAxis, YAxis, VerticalBarSeries } from 'react-vis';
 
 const width = 400;
 const height = 400;
