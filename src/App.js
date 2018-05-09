@@ -3,7 +3,8 @@ import './App.css';
 import BusMapContainer from './Components/BusMapContainer';
 import Filter from './Components/Filter';
 import RouteSummaryContainer from './Components/RouteSummaryContainer';
-import { Grid, Row, Col } from 'react-bootstrap';
+import JourneyPerformanceBarChart from './Components/JourneyPerformanceBarChart';
+import { Grid, Row, Col, Panel, Label } from 'react-bootstrap';
 
 const URL_ROOT = 'https://group5host.ccnysd17.org/api/';
 const defaultBusRoute = "";
@@ -161,20 +162,28 @@ class App extends Component {
           </Row>
 
           <Row  >
-            <Col md={4}>
-              <BusMapContainer busRoute={this.state.busRoute}
-                               geo={this.state.busRouteGeo}
-                               direction={this.state.direction}
-                               updateBusRoute={this.handleBusRouteChange}
-                               updateDirection={this.handleDirectionChange}
-                               updateStartStation={this.handleStartStation}
-                               updateEndStation={this.handleEndStation}
-                               />              
-            </Col>
+            <Panel>
+              <Panel.Heading className="text-left">Stop-By-Stop Journey</Panel.Heading>
+              <Grid>
+                <Row>
+                  <Col md={4}>
+                    <BusMapContainer busRoute={this.state.busRoute}
+                                     geo={this.state.busRouteGeo}
+                                     direction={this.state.direction}
+                                     updateBusRoute={this.handleBusRouteChange}
+                                     updateDirection={this.handleDirectionChange}
+                                     updateStartStation={this.handleStartStation}
+                                     updateEndStation={this.handleEndStation}
+                                     />              
+                  </Col>
 
-            <Col md={8}>
-                         
-            </Col>
+                  <Col md={4}>
+                    <Label className="text-center">Your Journey Performance</Label>
+                    <JourneyPerformanceBarChart />
+                  </Col>
+                </Row>
+              </Grid>
+            </Panel>
           </Row>
 
         </Grid>

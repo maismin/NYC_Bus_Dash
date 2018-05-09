@@ -7,7 +7,7 @@ import WeekDropDown from './WeekDropDown';
 import TimeDropDown from './TimeDropDown';
 import DateRangeDropDown from './DateRangeDropDown';
 
-import { Panel, Grid, Row, Col } from 'react-bootstrap';
+import { Panel, Grid, Row, Col} from 'react-bootstrap';
 
 const Filter = ({ busRoute, 
                   direction, 
@@ -26,7 +26,7 @@ const Filter = ({ busRoute,
     <Panel.Heading className="text-left">Filter</Panel.Heading>
     <Grid className="text-left">
       <Row>
-        <Col md={2}>
+        <Col md={4}>
             Bus Route
             <BusRouteDropdown
               value={busRoute}
@@ -44,7 +44,7 @@ const Filter = ({ busRoute,
       </Row>
 
       <Row>
-        <Col md={5}>
+        <Col md={6}>
             Start Station
             <BusStationDropDown
               busRoute={busRoute}
@@ -53,7 +53,7 @@ const Filter = ({ busRoute,
             />
         </Col>
 
-        <Col md={5}>
+        <Col md={6}>
             End Station
             <BusStationDropDown
               busRoute={busRoute}
@@ -64,21 +64,21 @@ const Filter = ({ busRoute,
       </Row>
 
       <Row>
-        <Col md={3}>
+        <Col md={4}>
           Date Range
           <DateRangeDropDown onChange={updateDate}
                         value={date}
                         />
         </Col>
 
-        <Col md={3}>
+        <Col md={4}>
           Week
           <WeekDropDown onChange={updateWeek}
                         value={week}
                         />
         </Col>
 
-        <Col md={3}>
+        <Col md={4}>
           Time
           <TimeDropDown onChange={updateTime}
                           value={time}
