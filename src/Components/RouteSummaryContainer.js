@@ -41,11 +41,12 @@ const RouteSummaryContainer = ({ excessWaitTime, routeLatenessFactor, avgSpeed, 
         </Col>
 
         <Col md={5}>
+          <Label> EWT Per Stop</Label>
           <ByStopsBarChart data={ewtByStop}/>
         </Col>
           
         <Col md={5}>
-          <Label>cumulative travel time across stops</Label>
+          <Label>Cumulative Travel Time Across Stops</Label>
           <CumulativeTravelTimeLineChart/>
         </Col>
       </Row>

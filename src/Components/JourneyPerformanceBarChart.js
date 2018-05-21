@@ -1,42 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react'; 
 import PropTypes from 'prop-types';
-import { XYPlot, XAxis, YAxis, VerticalBarSeries, HorizontalGridLines} from 'react-vis';
+import { XYPlot, XAxis, YAxis, VerticalBarSeries, HorizontalGridLines, Hint} from 'react-vis';
 
+var _ = require('lodash');
 const width = 400;
 const height = 400;
 
-const JourneyPerformanceBarChart = (xDomain, yDomain, onboardData, waitData) => (
-  <XYPlot
-    xType={'ordinal'}
-    width={width}
-    height={height}
-    stackBy="y"
-    xDomain={['Scheduled','Average','Planning']}
-    yDomain={[0,50]}
-  >
-  <VerticalBarSeries
-    cluster="stack 1"
-    data={data1}
-    style={{}}
-  />
-  <VerticalBarSeries
-    cluster="stack 1"
-    data={data2}
-    style={{}}
-  />
-  <YAxis  orientation="left"
-          position="end"
-          title="Minutes"
-    />
-  <XAxis  orientation="bottom"
-          position="end"
-  />
-  <HorizontalGridLines />
-</XYPlot>
-);
+class JourneyPerformanceBarChart extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hintValues: {}
+    };
+  }
+
+  render() {
+    return (
+      <XYPlot width={width} height={height} xType={'ordinal'}
+              >
+        <YAxis  orientation="left"
+                position="end"
+                title="Minutes"
+        />
+        <XAxis  orientation="bottom"
+                position="middle"
+                hideTicks
+        />
+        <VerticalBarSeries  data={this.props.data}
+                            onValueMouseOver={(datapoint, event)=>
+                              this.setState({hintValues: datapoint})
+                            }
+                            onValueMouseOut={()=>this.setState({hintValues: {}})}
+                            >
+        </VerticalBarSeries>
+        { !_.isEmpty(this.state.hintValues) &&
+          <Hint value={this.state.hintValues}>
+            <div style={{background: 'black'}}>
+              <p>{this.state.hintValues.x + ' Wait Times'}</p>
+              <p>{precisionRound(this.state.hintValues.y,2)}</p>
+            </div>
+          </Hint>
+        }
+      </XYPlot>
+    );
+  }
+}
+
 
 JourneyPerformanceBarChart.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
+}
+
+function precisionRound(number, precision) {
+  var factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
 }
 
 const data1=[

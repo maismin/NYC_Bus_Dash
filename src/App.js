@@ -13,11 +13,12 @@ const METRICS_API = 'http://api.busturnaround.nyc/api/v1/';
 const defaultBusRoute = "";
 const defaultDirection = {direction: "", value: -1};
 const defaultBusRouteGeo = {};
-const defaultStation = {station: "", value: -1};
+const defaultStation = {station: "", value: -1, sequence: -1};
 const defaultWeekRange = {label: "", value: -1};
 const defaultTimeRange = {label: "", value: -1};
 const defaultDateRange = {label: "", value: ""};
 const emptyData = [];
+var _ = require('lodash');
 
 class App extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class App extends Component {
       busRoute: defaultBusRoute,
       direction: defaultDirection,
       busRouteGeo: defaultBusRouteGeo,
+      busStations: [],
       startStation: defaultStation,
       endStation: defaultStation,
       weekInterval: defaultWeekRange,
@@ -36,7 +38,8 @@ class App extends Component {
       ewtByRoute: 0,
       latenessFactorByRoute: 0,
       avgSpeedByRoute: 0,
-      excessWaitTimeByStopsData: emptyData
+      excessWaitTimeByStopsData: emptyData,
+      ewtByJourney: emptyData
     }
 
     this.loadBusRoute = this.loadBusRoute.bind(this);
@@ -51,6 +54,7 @@ class App extends Component {
     this.grabETWroute = this.grabETWroute.bind(this);
     this.grabLatenessFactorRoute = this.grabLatenessFactorRoute.bind(this);
     this.grabAvgSpeedRoute = this.grabAvgSpeedRoute.bind(this);
+    this.grabJourPerf = this.grabJourPerf.bind(this);
   }
 
   loadBusRoute() {
@@ -60,7 +64,7 @@ class App extends Component {
     if(direction >= 0) {
       let endpoint = `geo/bus-route/${busRoute}/bus-direction/${direction}`;
       let url = URL_ROOT + endpoint;
-      console.log(`URL:${url}`);
+      // console.log(`URL:${url}`);
       fetch(url)
         .then(response => response.json())
         .then(busRouteGeo => {
@@ -70,6 +74,7 @@ class App extends Component {
             busRouteGeo
           });
         });
+      // this.updateBusStations();
     }
   }
 
@@ -84,7 +89,11 @@ class App extends Component {
         weekInterval: defaultWeekRange,
         timeInterval: defaultTimeRange,
         dateInterval: defaultDateRange,
-        excessWaitTimeByStopsData: emptyData
+        ewtByRoute: 0,
+        latenessFactorByRoute: 0,
+        avgSpeedByRoute: 0,
+        excessWaitTimeByStopsData: emptyData,
+        ewtByJourney: emptyData
       });
     } else {
       this.setState({
@@ -94,7 +103,11 @@ class App extends Component {
         weekInterval: defaultWeekRange,
         timeInterval: defaultTimeRange,
         dateInterval: defaultDateRange,
-        excessWaitTimeByStopsData: emptyData
+        ewtByRoute: 0,
+        latenessFactorByRoute: 0,
+        avgSpeedByRoute: 0,
+        excessWaitTimeByStopsData: emptyData,
+        ewtByJourney: emptyData
       });
     }
   }
@@ -104,14 +117,38 @@ class App extends Component {
     // console.log(target);
 
     const direction = target === null ? defaultDirection : target;
-    this.setState({
-      direction,
-      busRouteGeo: defaultBusRouteGeo
-    }, this.loadBusRoute);
-    // this.grabEWTByStopsData();
+    const busRoute = this.state.busRoute;
+    let busStations = [];
+
+    if (busRoute!=="" && direction.value>-1) {
+      let busStationPath = `stop-ids/bus-route/${busRoute}/bus-direction/${direction.value}`;
+      let URL = URL_ROOT + busStationPath;
+      fetch(URL)
+        .then(response => response.json())
+        .then(busStations => {
+          busStations = busStations.map(obj => obj.stop_id);
+          // console.log('bus stations');
+          // console.log(busStations);
+          this.setState({
+            busStations,
+            direction,
+            busRouteGeo: defaultBusRouteGeo,
+            startStation: defaultStation,
+            endStation: defaultStation,
+          }, this.loadBusRoute);
+        });
+    } else {
+      this.setState({
+        direction,
+        busRouteGeo: defaultBusRouteGeo,
+        startStation: defaultStation,
+        endStation: defaultStation,
+      }, this.loadBusRoute);
+    }
   }
 
   handleStartStation(busStation) {
+    // console.log(busStation);
     const startStation = busStation === null ? defaultStation : busStation;
     this.setState({
       startStation,
@@ -120,6 +157,7 @@ class App extends Component {
   }
 
   handleEndStation(busStation) {
+    // console.log(busStation);
     const endStation = busStation === null ? defaultStation : busStation;
     this.setState({
       endStation,
@@ -128,22 +166,21 @@ class App extends Component {
   }
 
   handleWeekInterval(week) {
-    console.log(week);
+    // console.log(week);
     this.setState({
       weekInterval: week
-    });
-    
+    });  
   }
 
   handleTimeInterval(time) {
-    console.log(time);
+    // console.log(time);
     this.setState({
       timeInterval: time
     });
   }
 
   handleDateInterval(date) {
-    console.log(date);
+    // console.log(date);
     this.setState({
       dateInterval: date
     });
@@ -155,18 +192,27 @@ class App extends Component {
     const prevWeek = prevState.weekInterval.value;
     const prevTime = prevState.timeInterval.value;
     const prevDate = prevState.dateInterval.value;
+    const prevStartStation = prevState.startStation.value;
+    const prevEndStation = prevState.endStation.value;
 
     const busRoute = this.state.busRoute;
     const direction = this.state.direction.value;
     const week = this.state.weekInterval.value;
     const time = this.state.timeInterval.value;
     const date = this.state.dateInterval.value;
+    const startStation = this.state.startStation.value;
+    const endStation = this.state.endStation.value;
+    const ewtByJourney = this.state.ewtByJourney;
 
     // console.log("BusRoute:",busRoute);
     // console.log("Direction:",direction);
     // console.log("Week:",week);
     // console.log("Time:",time);
     // console.log("Date:",date);
+    // console.log('prevSS:', prevStartStation);
+    // console.log('prevES:', prevEndStation);
+    // console.log('SS:', startStation);
+    // console.log('ES:', endStation);
 
     if (prevBusRoute!==busRoute || prevDirection!==direction || prevWeek!==week || prevTime!==time || prevDate!==date) {
       if (busRoute !== "" && direction >= 0 && week >= 0 && time >= 0 && date !== "") {
@@ -174,20 +220,32 @@ class App extends Component {
         this.grabEWTByStopsData(busRoute, direction, week, time, date);
         this.grabETWroute(busRoute, direction, week, time, date);
         this.grabLatenessFactorRoute(busRoute, direction, week, time, date);
-        this.grabAvgSpeedRoute(busRoute, direction, week, time, date);
+        this.grabAvgSpeedRoute(busRoute, direction, week, time, date); 
+
       }
+    }
+
+    if (busRoute !== "" && direction >= 0 && week >= 0 && time >= 0 && date !== "" && startStation > -1 && endStation > -1 && _.isEmpty(ewtByJourney)) {
+      // console.log('start end!');
+      this.grabJourPerf(busRoute, direction, week, time, date, startStation, endStation);
     }
   }
 
   grabEWTByStopsData(busRoute, direction, week, time, date) {
+    // console.log('getting new ewt by stops data');
+    const busStations = this.state.busStations;
+    // console.log(busStations);
+    console.log(busStations.join());
     let url = METRICS_API + "ewt?";
     url += "routes=" + busRoute + "&months=" + date;
     if (week !== 2) {
       url += "&weekend=" + week;
     }
     url += "&periods=" + time;
+    url += "&stops=" + busStations.join();
     url += "&groups=stop_id,direction=" + direction;
-    // console.log(PROXY_URL + url);
+    // url += "&order=-stop_id";
+    // console.log(url);
 
     fetch(PROXY_URL + url)
       .then(response => response.json())
@@ -204,12 +262,15 @@ class App extends Component {
   }
 
   grabETWroute(busRoute, direction, week, time, date) {
+    const busStations = this.state.busStations;
+    // console.log(busStops);
     let url = METRICS_API + "ewt?";
     url += "routes=" + busRoute + "&months=" + date;
     if (week !== 2) {
       url += "&weekend=" + week;
     }
     url += "&periods=" + time;
+    url += "&stops=" + busStations.join();
     // console.log(url);
 
     fetch(PROXY_URL + url)
@@ -224,13 +285,15 @@ class App extends Component {
   }
 
   grabLatenessFactorRoute(busRoute, direction, week, time, date) {
+    const busStations = this.state.busStations;
     let url = METRICS_API + "otp?";
     url += "routes=" + busRoute + "&months=" + date;
     if (week !== 2) {
       url += "&weekend=" + week;
     }
     url += "&periods=" + time;
-    console.log(url);
+    url += "&stops=" + busStations.join();
+    // console.log(url);
 
     fetch(PROXY_URL + url)
       .then(response => response.json())
@@ -244,22 +307,65 @@ class App extends Component {
   }
 
   grabAvgSpeedRoute(busRoute, direction, week, time, date) {
+    const busStations = this.state.busStations;
     let url = METRICS_API + "speed?";
     url += "routes=" + busRoute + "&months=" + date;
     if (week !== 2) {
       url += "&weekend=" + week;
     }
     url += "&periods=" + time;
+    url += "&stops=" + busStations.join();
+    // console.log(url);
+
+    fetch(PROXY_URL + url)
+      .then(response => response.json())
+      .then (data => {
+        // console.log(data);
+        let speed = data.map(d => d['speed']);
+        this.setState({
+          avgSpeedByRoute: precisionRound(speed,2)
+        });
+      });
+  }
+
+  grabJourPerf(busRoute, direction, week, time, date, startStation, endStation) {
+    // api call to get all the stops between start and end stops
+    const startStationID = this.state.startStation.value;
+    const endStationID = this.state.endStation.value;
+    const busStations = this.state.busStations;
+    // console.log(busStations);
+    const startIndex = _.indexOf(busStations, startStationID);
+    const endIndex = _.indexOf(busStations, endStationID);
+    const busStationsSlice = busStations.slice(startIndex, endIndex+1);
+    // console.log(startStationID);
+    // console.log(endStationID);
+    // console.log(busStations);
+    // console.log(busStationsSlice);
+    
+    let url = METRICS_API + "ewt?";
+    url += "routes=" + busRoute + "&months=" + date;
+    if (week !== 2) {
+      url += "&weekend=" + week;
+    }
+    url += "&periods=" + time;
+    url += "&stops=" + busStationsSlice.join();
     console.log(url);
 
     fetch(PROXY_URL + url)
       .then(response => response.json())
       .then (data => {
-        console.log(data);
-        let speed = data.map(d => d['speed']);
+        // console.log(data[0].swt, data[0].awt);
+        let ewtByJourney = [];
+        let d = {'x': 'Scheduled', 'y': data[0].swt/60};
+        let e = {'x': 'Actual', 'y': data[0].awt/60};
+        ewtByJourney.push(d,e);
+        console.log(ewtByJourney);
+        // let ewtByJourney = data.map(row => {
+        //   return ({'x': row['stop_name'], 'y': row['ewt']/60});
+        // });
         this.setState({
-          avgSpeedByRoute: precisionRound(speed,2)
-        });
+          ewtByJourney
+        })
       });
   }
 
@@ -313,7 +419,7 @@ class App extends Component {
 
                   <Col md={4}>
                     <Label className="text-center">Your Journey Performance</Label>
-                    <JourneyPerformanceBarChart />
+                    <JourneyPerformanceBarChart data={this.state.ewtByJourney}/>
                   </Col>
 
                   <Col md={4}>

@@ -12,7 +12,7 @@ import '../CSS/virtualizedSelect.css';
 const hostURL = 'https://group5host.ccnysd17.org/api/';
 const defaultBusRoute = "";
 const defaultDirection = {direction: "", value: -1};
-const defaultStation = {station: "", value: -1};
+const defaultStation = {station: "", value: -1, sequence: -1};
 
 const labelKey = "station";
 const valueKey = "value";
@@ -50,14 +50,14 @@ class BusStationDropDown extends Component {
       if (direction.value >= 0 && direction.value !== directionState.value) {
         // console.log('grab bus stations');
         isLoadingExternally = true;
-        let busStationPath = `bus-stations/bus-route/${busRoute}/bus-direction/${direction.value}`;
+        let busStationPath = `stop-ids/bus-route/${busRoute}/bus-direction/${direction.value}`;
         let URL = hostURL + busStationPath;
         fetch(URL)
           .then(response => response.json())
           .then(busStops => {
 
-            busStops = busStops.map((busStop, index) => {
-              return {'station': busStop.station, 'value': index};
+            busStops = busStops.map((busStop) => {
+              return {'station': busStop.station, 'value': busStop.stop_id, 'sequence': busStop.sequence};
             });
             // console.log(busStops);            
             isLoadingExternally = false;
