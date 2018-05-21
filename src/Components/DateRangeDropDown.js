@@ -4,7 +4,7 @@ import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
 const options = [
-  {value:"08-2014-11-2014", label:"Aug 2014 - Nov 2014"}
+  {value:"2014-08-01,2014-09-01,2014-10-01", label:"Aug 2014 - Nov 2014"}
 ];
 
 const DateRangeDropDown = ({value, onChange}) => (

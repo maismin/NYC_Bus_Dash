@@ -6,7 +6,7 @@ import { Panel, Grid, Row, Col, Well, Label } from 'react-bootstrap';
 
 import '../../node_modules/react-vis/dist/style.css';
 
-const RouteSummaryContainer = ({ excessWaitTime, routeLatenessFactor, avgSpeed }) => (
+const RouteSummaryContainer = ({ excessWaitTime, routeLatenessFactor, avgSpeed, ewtByStop}) => (
   <Panel>
     <Panel.Heading className="text-left">Route Summary</Panel.Heading>
     <Grid>
@@ -35,13 +35,13 @@ const RouteSummaryContainer = ({ excessWaitTime, routeLatenessFactor, avgSpeed }
                 <div className="text-uppercase">
                   <h5>Average Speed</h5>
                 </div>
-                <div>{avgSpeed}</div>
+                <div>{avgSpeed} MPH</div>
               </Well>
           </Row>
         </Col>
 
         <Col md={5}>
-          <ByStopsBarChart/>
+          <ByStopsBarChart data={ewtByStop}/>
         </Col>
           
         <Col md={5}>
@@ -59,4 +59,5 @@ RouteSummaryContainer.propTypes = {
   excessWaitTime: PropTypes.number,
   routeLatenessFactor: PropTypes.number,
   avgSpeed: PropTypes.number,
+  ewtByStop: PropTypes.arrayOf(PropTypes.object)
 }

@@ -4,10 +4,11 @@ import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
 const options = [
-  {value:"10am", label:"7am-10am"},
-  {value:"4pm", label:"10am-4pm"},
-  {value:"7pm", label:"4pm-7pm"},
-  {value:"10pm", label:"7pm-10pm"}
+  {value:0, label:"All"},
+  {value:1, label:"7am-10am"},
+  {value:2, label:"10am-4pm"},
+  {value:3, label:"4pm-7pm"},
+  {value:4, label:"7pm-11pm"}
 ];
 
 const TimeDropDown = ({value, onChange}) => (

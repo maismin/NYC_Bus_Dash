@@ -52,6 +52,11 @@ class DirectionDropdown extends Component {
             this.setState({ directions, busRoute, value: {}});
           });
       } 
+      // this.setState({
+      //   directions: [{"direction": "Uptown", "value": 0}],
+      //   busRoute,
+      //   value: {}
+      // });
     }  
   }
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "homepage": "/app/",
+  "homepage": "https://github.com/maismin/NYC_Bus_Dash#readme",
   "scripts": {
     "start": "PORT=5000 react-scripts start",
     "build": "react-scripts build",
@@ -21,7 +21,6 @@
   "bugs": {
     "url": "https://github.com/maismin/NYC_Bus_Dash/issues"
   },
-  "homepage": "https://github.com/maismin/NYC_Bus_Dash#readme",
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",
     "bootstrap": "^4.0.0",
@@ -43,7 +42,8 @@
     "react-scripts": "1.1.1",
     "react-virtualized-select": "^3.1.3",
     "react-vis": "^1.9.3",
-    "render-if": "^0.1.1"
+    "render-if": "^0.1.1",
+    "urllib": "^2.27.0"
   },
   "devDependencies": {
     "@storybook/react": "^3.3.15",

@@ -1,67 +1,58 @@
-import React from 'react';
+import React, { Component } from 'react'; 
 import PropTypes from 'prop-types';
-import { XYPlot, XAxis, YAxis, VerticalBarSeries } from 'react-vis';
+import { XYPlot, XAxis, YAxis, VerticalBarSeries, Hint } from 'react-vis';
 
+var _ = require('lodash');
 const width = 400;
 const height = 400;
 
-const ByStopsbarChart = (data) => (
-  <XYPlot width={width} height={height}>
-    <YAxis  orientation="left"
-            position="end"
-            title="Minutes"
-    />
-    <XAxis  orientation="bottom"
-            position="middle"
-            hideTicks
-    />
-    <VerticalBarSeries data={testData}>
-    </VerticalBarSeries>
-  </XYPlot>
-);
+class ByStopsbarChart extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hintValues: {}
+    };
+  }
 
-ByStopsbarChart.propTypes = {
-  data: PropTypes.object,
+  render() {
+    return (
+      <XYPlot width={width} height={height} xType={'ordinal'}
+              >
+        <YAxis  orientation="left"
+                position="end"
+                title="Minutes"
+        />
+        <XAxis  orientation="bottom"
+                position="middle"
+                hideTicks
+        />
+        <VerticalBarSeries  data={this.props.data}
+                            onValueMouseOver={(datapoint, event)=>
+                              this.setState({hintValues: datapoint})
+                            }
+                            onValueMouseOut={()=>this.setState({hintValues: {}})}
+                            >
+        </VerticalBarSeries>
+        { !_.isEmpty(this.state.hintValues) &&
+          <Hint value={this.state.hintValues}>
+            <div style={{background: 'black'}}>
+              <p>{this.state.hintValues.x}</p>
+              <p>{precisionRound(this.state.hintValues.y,2)}</p>
+            </div>
+          </Hint>
+        }
+      </XYPlot>
+    );
+  }
 }
 
+function precisionRound(number, precision) {
+  var factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+}
 
-const testData=[
-      {
-        x: 0,
-        y: 10
-      },
-      {
-        x: 1,
-        y: 8.572399085468916
-      },
-      {
-        x: 2,
-        y: 8.698206792951954
-      },
-      {
-        x: 3,
-        y: 9.909735741547557
-      },
-      {
-        x: 4,
-        y: 10.948392802633009
-      },
-      {
-        x: 5,
-        y: 12.538789788626334
-      },
-      {
-        x: 6,
-        y: 11.092960853975487
-      },
-      {
-        x: 7,
-        y: 10.681681043236832
-      },
-      {
-        x: 8,
-        y: 8.230614711258019
-      }
-    ];
+ByStopsbarChart.propTypes = {
+  data: PropTypes.array
+}
 
 export default ByStopsbarChart;

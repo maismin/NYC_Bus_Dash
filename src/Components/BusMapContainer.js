@@ -89,7 +89,7 @@ class BusMapContainer extends Component {
       click: function(e) {
         // console.log("you've clicked on " + e.target.feature.properties.stop_name);
         let station = {station: stopName, value: stopSequence};
-        console.log(station);
+        // console.log(station);
       }
 //      mouseout: this.resetHighlight.bind(this)
 //      click: this.clickToFeature.bind(this)
@@ -97,7 +97,7 @@ class BusMapContainer extends Component {
   }
 
   pointToLayer(feature, latlng) {
-    console.log(feature);
+    // console.log(feature);
     let options = {
       color: '#3388ff',
       fill: true,
